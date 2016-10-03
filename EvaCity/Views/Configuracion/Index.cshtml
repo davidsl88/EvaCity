@@ -1,0 +1,459 @@
+﻿@model EvaCity.Models.IndexViewModel
+@{
+    ViewBag.Title = "Configuración";
+}
+
+@Scripts.Render("~/bundles/jquery")
+
+@*<p class="text-success">@ViewBag.StatusMessage</p>*@
+<div class="container-fluid">
+    <div id="configuracion">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title text-center">Configuración</h4>
+                        </div>
+                        <ul class="nav nav-pills nav-stacked">
+                            <li><a href="#" id="idMenuDatosPersonales">Datos Personales</a></li>
+                            @if (this.User.IsInRole("Administrador"))
+                            {
+                                <li><a href="#" id="idMenuUsuarios">Usuarios</a></li>
+                            }
+                            @*<li><a href="#" id="idMenuProyectos">Proyectos</a></li>*@
+                            @*@if (this.User.IsInRole("Administrador"))
+                            {
+                            <li><a href="#" id="idMenuCiudades">Ciudades</a></li>
+                            }*@
+                            <li><a href="#" id="idMenuUbicaciones">Ubicaciones</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">                 
+                <div id="idDatosPersonales" class="panel panel-footer">
+                    <table class="table table-hover">
+                        <tbody>
+                            @*Nombre de usuario*@
+                            <tr id="rowNombreUsuario">
+                                <td class="col-md-4"><label>Nombre</label></td>
+                                <td class="col-md-4"><span id="labelNombreUsuario">@Model.DatosPersonales.UserName</span></td>
+                                <td class="col-md-4">
+                                    <div id="editarNombreUsuario">
+                                        <a class="pull-right cursor_editar">Editar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="nombreUsuario-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4"><input type="text" id="txtNombreUsuario" class="form-control" value="@Model.DatosPersonales.UserName" placeholder="Usuario..." /></td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            <tr class="nombreUsuario-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4">
+                                    <button type="submit" class="btn btn-primary" onclick="editarNombreUsuario()">Guardar</button>
+                                    <button type="submit" id="cancelarNombreUsuario" class="btn btn-default">Cancelar</button>
+                                </td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            @*Perfil*@
+                            @if (User.IsInRole("Administrador"))
+                            {
+                            <tr id="rowPerfil">
+                                <td class="col-md-4"><label>Perfil</label></td>
+                                <td class="col-md-4">
+                                    <span id="labelPerfil">
+                                        @Model.DatosPersonales.Perfil
+                                    </span>
+                                </td>
+                                <td class="col-md-4">
+                                    <div id="editarPerfil">
+                                        <a class="pull-right cursor_editar">Editar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="perfil-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4">
+                                    @Html.DropDownListFor(model => model.PerfilSeleccionado, Model.Perfiles, new { @class = "form-control dropdown", @id = "perfilSeleccionado" })
+                                </td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            <tr class="perfil-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4">
+                                    <button type="submit" class="btn btn-primary" onclick="editarPerfil()">Guardar</button>
+                                    <button type="submit" id="cancelarPerfil" class="btn btn-default">Cancelar</button>
+                                </td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            }
+                            @*Fecha de nacimiento*@
+                            <tr id="rowFechaNacimiento">
+                                <td class="col-md-4"><label>Fecha de nacimiento</label></td>
+                                <td class="col-md-4"><span id="labelFechaNacimiento">@Model.DatosPersonales.FechaNacimiento</span></td>
+                                <td class="col-md-4">
+                                    <div id="editarFechaNacimiento">
+                                        <a class="pull-right cursor_editar">Editar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="fechaNacimiento-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4">
+                                    <input type="date" id="txtFechaNacimiento" class="form-control" value="@Model.DatosPersonales.FechaNacimiento" />
+                                </td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            <tr class="fechaNacimiento-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4">
+                                    <button type="submit" class="btn btn-primary" onclick="editarFechaNacimiento()">Guardar</button>
+                                    <button type="submit" id="cancelarFechaNacimiento" class="btn btn-default">Cancelar</button>
+                                </td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            @*Telefono*@
+                            <tr id="rowTelefono">
+                                <td class="col-md-4"><label>Teléfono</label></td>
+                                <td class="col-md-4"><span id="labelTelefono">@Model.DatosPersonales.PhoneNumber</span></td>
+                                <td class="col-md-4">
+                                    <div id="editarTelefono">
+                                        <a class="pull-right cursor_editar">Editar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="telefono-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4"><input type="number" id="txtTelefono" class="form-control" value="@Model.DatosPersonales.PhoneNumber" placeholder="Telefono..." /></td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            <tr class="telefono-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4">
+                                    <button type="submit" class="btn btn-primary" onclick="editarTelefono()">Guardar</button>
+                                    <button type="submit" id="cancelarTelefono" class="btn btn-default">Cancelar</button>
+                                </td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            @*Email*@
+                            <tr id="rowEmail">
+                                <td class="col-md-4"><label>Email</label></td>
+                                <td class="col-md-4"><span id="labelEmail">@Model.DatosPersonales.Email</span></td>
+                                <td class="col-md-4">
+                                    <div id="editarEmail">
+                                        <a class="pull-right cursor_editar">Editar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="email-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4">
+                                    <input type="email" id="txtEmail" class="form-control" value="@Model.DatosPersonales.Email" />
+                                </td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            <tr class="email-hide">
+                                <td class="col-md-4"></td>
+                                <td class="col-md-4">
+                                    <button type="submit" class="btn btn-primary" onclick="editarEmail()">Guardar</button>
+                                    <button type="submit" id="cancelarEmail" class="btn btn-default">Cancelar</button>
+                                </td>
+                                <td class="col-md-4"></td>
+                            </tr>
+                            @*Contraseña*@
+                            @using (Ajax.BeginForm("CambiarPassword", "Configuracion", new AjaxOptions { }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <tr id="rowContraseña">
+                                    <td class="col-md-4"><label>Contraseña</label></td>
+                                    <td class="col-md-4"></td>
+                                    <td class="col-md-4">
+                                        <div id="editarContraseña">
+                                            <a class="pull-right cursor_editar">Editar</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="contraseña-hide">
+                                    <td class="col-md-4">Contraseña actual</td>
+                                    <td class="col-md-4">
+                                        @Html.PasswordFor(m => m.CambiarPassword.ActualPassword, new { @class = "form-control" })
+                                    </td>
+                                    <td class="col-md-4"></td>
+                                </tr>
+                                <tr class="contraseña-hide">
+                                    <td class="col-md-4">Nueva contraseña</td>
+                                    <td class="col-md-4">
+                                        @Html.PasswordFor(m => m.CambiarPassword.NuevaPassword, new { @class = "form-control" })
+                                    </td>
+                                    <td class="col-md-4"></td>
+                                </tr>
+                                <tr class="contraseña-hide">
+                                    <td class="col-md-4">Confirmar contraseña</td>
+                                    <td class="col-md-4">
+                                        @Html.PasswordFor(m => m.CambiarPassword.ConfirmarPassword, new { @class = "form-control" })
+                                    </td>
+                                    <td class="col-md-4"></td>
+                                </tr>
+                                <tr class="contraseña-hide">
+                                    <td class="col-md-4"></td>
+                                    <td class="col-md-4">
+                                        @*<button type="submit" class="btn btn-primary" onclick="editarContraseña()">Guardar</button>*@
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                        <button type="submit" id="cancelarContraseña" class="btn btn-default">Cancelar</button>
+                                    </td>
+                                    <td class="col-md-4"></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="hiddenIdUsuario" name="idUsuario" value="@Model.DatosPersonales.Id">
+                </div>
+
+                @if (this.User.IsInRole("Administrador"))
+                {
+                    <div id="idUsuarios">
+                            @foreach (var usuario in Model.Usuarios)
+                            {
+                            <input type="hidden" id="@("hiddenUsuarioIdUsuario_" + @usuario.Id)" name="idUsuario" value="@usuario.Id">
+                            <table id="tableUsuarios" class="table table-hover">
+                                <tbody id="tbodyUsuarios" class="panel panel-footer">
+                                    @*Nombre de usuario*@
+                                    <tr id="rowUsuarioNombreUsuario">
+                                        <td class="col-md-4"><label>Nombre</label></td>
+                                        <td class="col-md-4"><span id="labelUsuarioNombreUsuario">@usuario.UserName</span></td>
+                                        <td class="col-md-4">
+                                            <div id="editarUsuarioNombreUsuario">
+                                                <a class="pull-right cursor_editar">Editar</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="usuarioNombreUsuario-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4"><input type="text" id="txtUsuarioNombreUsuario" class="form-control" value="@usuario.UserName" placeholder="Usuario..." /></td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    <tr class="usuarioNombreUsuario-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            <button type="submit" class="btn btn-primary" onclick="editarUsuarioNombreUsuario('@usuario.Id')">Guardar</button>
+                                            <button type="submit" id="cancelarUsuarioNombreUsuario" class="btn btn-default">Cancelar</button>
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    @*Perfil*@
+                                    <tr id="rowUsuarioPerfil">
+                                        <td class="col-md-4"><label>Perfil</label></td>
+                                        <td class="col-md-4">
+                                            <span id="labelUsuarioPerfil">
+                                                @usuario.Perfil
+                                            </span>
+                                        </td>
+                                        <td class="col-md-4">
+                                            <div id="editarUsuarioPerfil">
+                                                <a class="pull-right cursor_editar">Editar</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="usuarioPerfil-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            @Html.DropDownListFor(model => model.PerfilSeleccionado, Model.Perfiles, new { @class = "form-control dropdown", @id = "usuarioPerfilSeleccionado" })
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    <tr class="usuarioPerfil-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            <button type="submit" class="btn btn-primary" onclick="editarPerfil('@usuario.Id')">Guardar</button>
+                                            <button type="submit" id="cancelarUsuarioPerfil" class="btn btn-default">Cancelar</button>
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    @*Fecha de nacimiento*@
+                                    <tr id="rowUsuarioFechaNacimiento">
+                                        <td class="col-md-4"><label>Fecha de nacimiento</label></td>
+                                        <td class="col-md-4"><span id="labelUsuarioFechaNacimiento">@usuario.FechaNacimiento</span></td>
+                                        <td class="col-md-4">
+                                            <div id="editarUsuarioFechaNacimiento">
+                                                <a class="pull-right cursor_editar">Editar</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="usuarioFechaNacimiento-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            <input type="date" id="txtUsuarioFechaNacimiento" class="form-control" value="@usuario.FechaNacimiento" />
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    <tr class="usuarioFechaNacimiento-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            <button type="submit" class="btn btn-primary" onclick="editarUsuarioFechaNacimiento('@usuario.Id')">Guardar</button>
+                                            <button type="submit" id="cancelarUsuarioFechaNacimiento" class="btn btn-default">Cancelar</button>
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    @*Telefono*@
+                                    <tr id="rowUsuarioTelefono">
+                                        <td class="col-md-4"><label>Teléfono</label></td>
+                                        <td class="col-md-4"><span id="labelUsuarioTelefono">@usuario.PhoneNumber</span></td>
+                                        <td class="col-md-4">
+                                            <div id="editarUsuarioTelefono">
+                                                <a class="pull-right cursor_editar">Editar</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="usuarioTelefono-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4"><input type="number" id="txtUsuarioTelefono" class="form-control" value="@usuario.PhoneNumber" placeholder="Telefono..." /></td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    <tr class="usuarioTelefono-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            <button type="submit" class="btn btn-primary" onclick="editarUsuarioTelefono('@usuario.Id')">Guardar</button>
+                                            <button type="submit" id="cancelarUsuarioTelefono" class="btn btn-default">Cancelar</button>
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    @*Email*@
+                                    <tr id="rowUsuarioEmail">
+                                        <td class="col-md-4"><label>Email</label></td>
+                                        <td class="col-md-4"><span id="labelUsuarioEmail">@usuario.Email</span></td>
+                                        <td class="col-md-4">
+                                            <div id="editarUsuarioEmail">
+                                                <a class="pull-right cursor_editar">Editar</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="usuarioEmail-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            <input type="email" id="txtUsuarioEmail" class="form-control" value="@usuario.Email" />
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    <tr class="usuarioEmail-hide">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            <button type="submit" class="btn btn-primary" onclick="editarUsuarioEmail('@usuario.Id')">Guardar</button>
+                                            <button type="submit" id="cancelarUsuarioEmail" class="btn btn-default">Cancelar</button>
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    <tr class="eliminarUsuario">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@("modalEliminarUsuario_" + @usuario.Id)">Eliminar</button>
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div id="@("modalEliminarUsuario_" + @usuario.Id)" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Eliminar Usuario</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Seguro que quieres eliminar el usuario <label>@usuario.UserName</label>?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-danger" data-dismiss="modal" onclick="location.href='@Url.Action("EliminarUsuario", "Configuracion", new { idUsuario = @usuario.Id })'">Eliminar</button>
+                                            <button type="submit" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                            <input type="hidden" id="hiddenIdUsuario" name="idUsuario" value="@Model.DatosPersonales.Id">
+                        </div>
+                }
+
+                <div id="idUbicaciones">
+                    @{
+                        if (Model.Ubicaciones.Count() == 0)
+                        {
+                            <label class="error">No hay ubicaciones disponibles.</label>
+                        }
+                        else
+                        {
+                            foreach (var item in Model.Ubicaciones)
+                            {
+                            <table id="ubicaciones" class="table table-hover">
+                                <tbody class="panel panel-footer">
+
+                                    <tr>
+                                        <td class="col-md-4"><label>Dirección</label></td>
+                                        <td class="col-md-4">@item.Direccion</td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"><label>Tipo de Ubicacion</label></td>
+                                        <td class="col-md-4">@item.TipoUbicacion</td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    @if (item.TipoUbicacion != "Punto de Reciclaje")
+                                    {
+                                    <tr>
+                                        <td class="col-md-4"><label>Nombre Empresa</label></td>
+                                        <td class="col-md-4">@item.NombreEmpresa</td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"><label>URL</label></td>
+                                        <td class="col-md-4">@item.Url</td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    }
+                                    @if (User.IsInRole("Administrador"))
+                                    {
+                                    <tr>
+                                        <td class="col-md-4"><label>Usuario</label></td>
+                                        <td class="col-md-4">@item.NombreUsuario</td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                    }
+                                    <tr class="eliminarUbicacion">
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-4">
+                                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@("modalEliminarUbicacion_" + @item.UbicacionId)">Eliminar</button>
+                                        </td>
+                                        <td class="col-md-4"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div id="@("modalEliminarUbicacion_" + @item.UbicacionId)" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Eliminar Ubicación</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Seguro que quieres eliminar la ubicación?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-danger" data-dismiss="modal" onclick="location.href='@Url.Action("EliminarUbicacion", "Ubicacion", new { idUbicacion = @item.UbicacionId })'">Eliminar</button>
+                                            <button type="submit" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/configuracion.js"></script>

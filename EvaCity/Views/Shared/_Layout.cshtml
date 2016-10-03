@@ -3,37 +3,88 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - EvaCity</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
+    <div class="navbar navbar-fixed-top">
+        <div class="container-fluid">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
-            <div class="navbar-collapse collapse">
+            <div class="navbar-collapse collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    @{var valueCiudad = "";
+                        if (System.Web.HttpContext.Current.Session["ciudad"] != null)
+                        {
+                            valueCiudad = System.Web.HttpContext.Current.Session["ciudad"].ToString();
+                        }
+                    }
+                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Contaminación", "Informacion", new { controller = "Proyecto", seccion = 1, ciudad = valueCiudad })</li>
+                    <li>@Html.ActionLink("Energías Renovables", "Informacion", new { controller = "Proyecto", seccion = 2, ciudad = valueCiudad })</li>
+                    <li>@Html.ActionLink("Reciclaje", "Informacion", new { controller = "Proyecto", seccion = 3, ciudad = valueCiudad })</li>
+                    <li>@Html.ActionLink("Movilidad Sostenible", "Informacion", new { controller = "Proyecto", seccion = 4, ciudad = valueCiudad })</li>
+                    <li>@Html.ActionLink("Negocios Sostenibles", "Informacion", new { controller = "Proyecto", seccion = 5, ciudad = valueCiudad })</li>
+                    <li>@Html.ActionLink("Secciones", "BuscarCiudad", "Ciudad")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
     <div class="container body-content">
+        <div class="container-fluid" style="margin-top:40px; margin-bottom:40px; margin-top:70px">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    @using (Html.BeginForm("BuscarCiudad", "Ciudad", FormMethod.Post))
+                    {
+                        <div class="input-group">
+                            <input type="text" id="txtBuscarCiudad" name="nombreCiudad" class="form-control" placeholder="Ciudad...">
+                            <span class="input-group-btn">
+                                <input type="submit" value="Buscar" class="btn btn-info" />
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
         @RenderBody()
-        <hr />
+        @*<hr />*@
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <div class="footer-fixed">
+                <div class="container narrow row-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            @*<h2>Getting started</h2>
+                            <p>
+                                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
+                                enables a clean separation of concerns and gives you full control over markup
+                                for enjoyable, agile development.
+                            </p>
+                            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>*@
+                        </div>
+                        <div class="col-md-4">
+                            @*<h2>Get more libraries</h2>
+                            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+                            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>*@
+                        </div>
+                        <div class="col-md-4">
+                            @*<h2>Web Hosting</h2>
+                            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+                            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        @*<p style="text-align:center;">&copy; @DateTime.Now.Year - EvaCity</p>*@
+                    </div>
+                </div>
+            </div>
         </footer>
     </div>
 

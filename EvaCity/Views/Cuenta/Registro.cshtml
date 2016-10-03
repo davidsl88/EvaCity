@@ -1,0 +1,72 @@
+﻿@model EvaCity.Models.RegistroViewModel
+@{
+    ViewBag.Title = "Registrarse";
+}
+
+@using (Html.BeginForm("Registro", "Cuenta", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
+            <h2>@ViewBag.Title</h2>
+            <hr />
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.Nombre, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.FechaNacimiento, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.FechaNacimiento, new { @class = "form-control", type = "date" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.CiudadSeleccionada, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.DropDownListFor(m => m.CiudadSeleccionada, Model.Ciudades, new { @class = "form-control dropdown", @id = "ciudadSeleccionada" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Perfil, new { @class = "col-md-4 control -label" })
+                <div class="col-md-8">
+                    @Html.CheckBoxFor(m => m.Perfil, new { @class = "checkbox" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-6 col-md-10">
+                    <input type="submit" class="btn btn-success" value="Registro" />
+                    <input type="button" class="btn btn-danger" value="Cancelar" onclick="location.href='@Url.Action("Index","Home")'" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

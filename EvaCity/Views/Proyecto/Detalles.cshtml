@@ -1,0 +1,83 @@
+﻿@model EvaCity.Models.ViewModels.ProyectoViewModel
+
+@{
+    ViewBag.Title = "Detalles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalles</h2>
+@*@{
+    var valueCiudad = "";
+    if (System.Web.HttpContext.Current.Session["ciudad"] != null)
+    {
+        valueCiudad = System.Web.HttpContext.Current.Session["ciudad"].ToString();
+    }
+    var seccion = Session["idSeccion"];
+}*@
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel-group">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">@Html.DisplayFor(model => model.Nombre)</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>@Html.DisplayNameFor(model => model.FechaCreacion)</label>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.DisplayFor(model => model.FechaCreacion)
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>@Html.DisplayNameFor(model => model.NombreCiudad)</label>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.DisplayFor(model => model.NombreCiudad)
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>@Html.DisplayNameFor(model => model.NombreUsuario)</label>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.DisplayFor(model => model.NombreUsuario)
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>@Html.DisplayNameFor(model => model.Descripcion)</label>
+                            </div>
+                            <div class="col-md-3 truncate">
+                                @Html.DisplayFor(model => model.Descripcion)
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            @if (User.IsInRole("Administrador") || Model.Editable == true)
+            {
+            <button type="submit" class="btn btn-warning" onclick="location.href='@Url.Action("EditarProyecto", "Proyecto", new { id = Model.ProyectoId })'">
+                Editar
+            </button>
+            }
+            <input type="submit" value="Volver" class="btn btn-danger" onclick="location.href='@Url.Action("Informacion","Proyecto", new { seccion = Session["idSeccion"], ciudad = Session["ciudad"] })'" />
+        </div>
+    </div>
+</div>

@@ -1,30 +1,28 @@
-﻿using System;
+﻿using EvaCity.Models.ViewModels;
+using EvaCity.Servicios;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace EvaCity.Controllers
 {
     public class HomeController : Controller
     {
+        private ProyectoServicio proyectoServicio = new ProyectoServicio();
+
         public ActionResult Index()
         {
-            return View();
-        }
+            var listaProyectos = proyectoServicio.ObtenerUltimosProyectos(5);
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+            IList<ProyectoViewModel> listaProyectosVM = new List<ProyectoViewModel>();
 
-            return View();
-        }
+            foreach (var proyecto in listaProyectos)
+            {
+                ProyectoViewModel proyectoVM = new ProyectoViewModel();
+                proyectoServicio.ProyectoModelToViewModel(proyectoVM, proyecto);
+                listaProyectosVM.Add(proyectoVM);
+            }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return View(listaProyectosVM);
         }
     }
 }

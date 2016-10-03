@@ -1,31 +1,141 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model IEnumerable<EvaCity.Models.ViewModels.ProyectoViewModel>
+@{
+    ViewBag.Title = "Inicio";
 }
+<div>
+    <h2>Ultimos proyectos</h2>
+</div>
+<br />
+<div id="proyectosCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#proyectosCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#proyectosCarousel" data-slide-to="1"></li>
+        <li data-target="#proyectosCarousel" data-slide-to="2"></li>
+        <li data-target="#proyectosCarousel" data-slide-to="3"></li>
+        <li data-target="#proyectosCarousel" data-slide-to="4"></li>
+    </ol>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+        @{
+            int contador = 1;
+        }
+        @foreach (var item in Model)
+        {
+            if (contador == 1) {
+                <div class="item active">
+                    <div class="panel-group panel-margin-bottom">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-6 pull-left col-md-offset-1">
+                                            <label>@Html.DisplayFor(modelItem => item.Nombre)</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label>@Html.DisplayFor(modelItem => item.FechaCreacion)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-3 col-md-offset-1">
+                                            <label>Sección:</label><span>@Html.DisplayFor(modelItem => item.NombreSeccion)</span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Usuario:</label><span>@Html.DisplayFor(modelItem => item.NombreUsuario)</span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>Ciudad:</label><span>@Html.DisplayFor(modelItem => item.NombreCiudad)</span>
+                                        </div>
+                                        <div class="col-md-2">
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-11 col-md-offset-1">
+                                            <label>Descripción:</label>
+                                        </div>
+                                        <div class="col-md-12 col-md-offset-1">
+                                            <span>@Html.DisplayFor(modelItem => item.Descripcion)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="item">
+                    <div class="panel-group panel-margin-bottom">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-md-12 col-md-offset-1">
+                                        <div class="col-md-7 pull-left">
+                                            <label>@Html.DisplayFor(modelItem => item.Nombre)</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label>@Html.DisplayFor(modelItem => item.FechaCreacion)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-3 col-md-offset-1">
+                                        <label>Sección:</label><span>@Html.DisplayFor(modelItem => item.NombreSeccion)</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Usuario:</label><span>@Html.DisplayFor(modelItem => item.NombreUsuario)</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Ciudad:</label><span>@Html.DisplayFor(modelItem => item.NombreCiudad)</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12 col-md-offset-1">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Descripción:</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span>@Html.DisplayFor(modelItem => item.Descripcion)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            contador = contador + 1;
+        }
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="left carousel-control" href="#proyectosCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#proyectosCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>

@@ -1,0 +1,401 @@
+﻿@model Tuple<EvaCity.Models.ViewModels.InformacionViewModel, EvaCity.Models.ViewModels.TipoUbicacionViewModel>
+
+@{
+    ViewBag.Title = "Información";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{var valueCiudad = "";
+    if (System.Web.HttpContext.Current.Session["ciudad"] != null)
+    {
+        valueCiudad = System.Web.HttpContext.Current.Session["ciudad"].ToString();
+        <h4 class="text-center text-info">Ciudad: @valueCiudad</h4>
+    }
+    else
+    {
+        <h4 class="text-center text-info">No has seleccionado ninguna ciudad.</h4>
+    }
+}
+<div class="container-fluid">
+    <div id="proyectos">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="panel-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 class="panel-title text-center">@ViewBag.Seccion</h4>
+                        </div>
+                        <ul class="nav nav-pills nav-stacked">
+                            <li><a href="#" id="menuProyectos">Proyectos</a></li>
+                            <li><a href="#" id="menuMapa">Mapa</a></li>
+                            <li><a href="#" id="menuEmpresas">Empresas</a></li>
+                            <li><a href="#" id="menuRanking">Ranking</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="contenidoProyectos">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <div class="row">
+                            <div class="panel-group">
+                                <div class="panel-body">
+                                    <button type="submit" class="btn btn-primary" onclick="location.href='@Url.Action("NuevoProyecto", "Proyecto")'">
+                                        Crear Proyecto
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <input type="hidden" id="hiddenNombreUsuario" name="nombreUsuario" value="@User.Identity.Name">
+                        <input type="hidden" id="hiddenCiudad" value="@valueCiudad" />
+                        <input type="hidden" id="hiddenSeccion" value="@ViewBag.Seccion" />
+                        @{
+                            if (Model.Item1.proyectosViewModel.Count() == 0)
+                            {
+                                <label class="error">No hay proyectos disponibles.</label>
+                            }
+                            else
+                            {
+                                foreach (var item in Model.Item1.proyectosViewModel)
+                                {
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="panel-group">
+                                                    <div class="panel panel-success">
+                                                        <div class="panel-heading">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="col-md-8 pull-left">
+                                                                        <label>@Html.DisplayFor(modelItem => item.Nombre)</label>
+                                                                    </div>
+                                                                    <div class="col-md-4 text-right">
+                                                                        <label>@Html.DisplayFor(modelItem => item.FechaCreacion)</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @{
+                                                            var clase = "";
+                                                            if (item.EsAP == true)
+                                                            {
+                                                                clase = " panel-background";
+                                                            }
+                                                        }
+                                                        <div class="panel-body + @clase">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label>Sección:</label><span>@Html.DisplayFor(modelItem => item.NombreSeccion)</span>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>Usuario:</label><span>@Html.DisplayFor(modelItem => item.NombreUsuario)</span>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label>Ciudad:</label><span>@Html.DisplayFor(modelItem => item.NombreCiudad)</span>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="pull-right">
+                                                                        <div class="col-md-6">
+                                                                            <span id="botonPositivos" class="glyphicon glyphicon-thumbs-up" onclick="botonPositivos(@item.ProyectoId)" style="cursor:pointer"></span>
+                                                                            <span id="@("positivos_" + @item.ProyectoId)" class="text-right text-glyphicon">@Html.DisplayFor(modelItem => item.VotosPositivos)</span>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <span id="botonNegativos" class="glyphicon glyphicon-thumbs-down" onclick="botonNegativos(@item.ProyectoId)" style="cursor:pointer"></span>
+                                                                            <span id="@("negativos_" + @item.ProyectoId)" class="text-right text-glyphicon">@Html.DisplayFor(modelItem => item.VotosNegativos)</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <br />
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label>Descripción:</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 truncate">
+                                                                            <span class="truncate">@Html.DisplayFor(modelItem => item.Descripcion)</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <br />
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <button type="submit" class="btn btn-primary" onclick="location.href='@Url.Action("Detalles", "Proyecto", new { idProyecto = item.ProyectoId })'">
+                                                                        Ver
+                                                                    </button>
+                                                                    @if (Request.IsAuthenticated && (User.IsInRole("Administrador") || item.Editable))
+                                                                    {
+                                                                    <button type="submit" class="btn btn-warning" onclick="location.href='@Url.Action("EditarProyecto", "Proyecto", new { id = item.ProyectoId })'">
+                                                                        Editar
+                                                                    </button>
+                                                                    }
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    @if (Request.IsAuthenticated && User.IsInRole("Administrador"))
+                                                                    {
+                                                                    <div class="pull-right">
+                                                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar">Eliminar</button>
+                                                                    </div>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="modalEliminar" class="modal fade" role="dialog">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Eliminar Proyecto</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Seguro que quieres eliminar el proyecto <label>@item.Nombre</label>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-danger" data-dismiss="modal" onclick="location.href='@Url.Action("EliminarProyecto", "Proyecto", new { idProyecto = item.ProyectoId })'">Eliminar</button>
+                                                    <button type="submit" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+                <div id="contenidoMapa">
+                    <div class="row">
+                        <div id="mapa" class="col-md-12">
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-5">
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalUbicacion">Enviar Ubicación</button>
+                        </div>
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+
+                    <!-- Modal Enviar Ubicacion-->
+                    <div id="modalUbicacion" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Nueva Ubicación</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-4">
+                                                <label>Dirección</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="txtDireccion" value="" placeholder="Dirección..." />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-4">
+                                                <label>Tipo de Ubicación</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                @Html.DropDownListFor(model => model.Item2.TipoUbicacionSeleccionada, Model.Item2.TiposUbicaciones, new { @class = "form-control dropdown", @id = "ubicacionSeleccionada", @onchange = "mostrarUrlEmpresaUbicacion(this.value)" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div id="nombreEmpresa" class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-4">
+                                                <label>Empresa</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="txtNombreEmpresa" value="" placeholder="Nombre..." />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div id="urlUbicacion" class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-4">
+                                                <label>URL</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" id="txtUrl" value="" placeholder="URL..." />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success" data-dismiss="modal" onclick="insertarUbicacion()">Enviar</button>
+                                    <button type="submit" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="contenidoEmpresas">
+                    <div class="row">
+                        @{
+                            if (Model.Item1.ubicacionesViewModel.Count() == 0)
+                            {
+                                <label class="error">No hay empresas disponibles.</label>
+                            }
+                            else
+                            {
+                                foreach (var item in Model.Item1.ubicacionesViewModel)
+                                {
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="panel-group">
+                                                    <div class="panel panel-success">
+                                                        <div class="panel-heading">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="col-md-6 pull-left">
+                                                                        <label>@Html.DisplayFor(modelItem => item.NombreEmpresa)</label>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        @if (Request.IsAuthenticated && User.IsInRole("Administrador"))
+                                                                        {
+                                                                            <div class="pull-right">
+                                                                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminarEmpresa">Eliminar</button>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Direccion:</label><span> @Html.DisplayFor(modelItem => item.Direccion)</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Ciudad:</label><span> @Html.DisplayFor(modelItem => item.NombreCiudad)</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Tipo de Empresa:</label><span> @Html.DisplayFor(modelItem => item.TipoUbicacion)</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>URL:</label><span> <a href="http://@item.Url">@Html.DisplayFor(modelItem => item.Url)</a></span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="modalEliminarEmpresa" class="modal fade" role="dialog">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Eliminar Proyecto</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Seguro que quieres eliminar la empresa <label>@item.NombreEmpresa</label>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-danger" data-dismiss="modal" onclick="location.href='@Url.Action("EliminarUbicacion", "Ubicacion", new { idUbicacion = item.UbicacionId })'">Eliminar</button>
+                                                    <button type="submit" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+                <div id="contenidoRanking">
+                    <div class="table-responsive">
+                        <table id="rankingCiudades" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Posición</th>
+                                    <th>Nombre</th>
+                                    <th>País</th>
+                                    <th>Votos Positivos</th>
+                                    <th>Votos Negativos</th>
+                                    <th>Votos Totales</th>
+                                    <th>Valoración</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyRanking">
+                            @{
+                                int contador = 1;
+
+                                foreach (var item in Model.Item1.ciudadesViewModel)
+                                {
+                                    string clase = "";
+                                    if (Model.Item1.usuarioViewModel != null && item.Nombre == Model.Item1.usuarioViewModel.CiudadUsuario)
+                                    {
+                                        clase = "info";
+                                    }
+                                    <tr class="@clase">
+                                        <td>@contador</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Pais)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.VotosPositivos)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.VotosNegativos)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.VotosTotales)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Valoracion)%</td>
+                                        @{ contador++; }
+                                    </tr>
+                                }
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&libraries=visualization&key=AIzaSyBNYi8FiP6CVgW--FwefxkUo1-vsVLWuuI"></script>
+@*<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&libraries=visualization&key=AIzaSyBNYi8FiP6CVgW--FwefxkUo1-vsVLWuuI"></script>*@
+<script src="~/Scripts/informacion.js"></script>
