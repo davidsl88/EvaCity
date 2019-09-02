@@ -62,4 +62,4 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-EvaCity/Scripts/* linguist-vendored
+*.js linguist-detectable=false
